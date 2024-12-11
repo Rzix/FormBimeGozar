@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
 
-const Form = () => {
+const Form2 = () => {
   const [formData, setFormData] = useState({
     policyId: "",
     payerBimegozar: "",
@@ -24,7 +24,7 @@ const Form = () => {
 
     const queryString = new URLSearchParams(formData).toString();
 
-    navigate(`/result?${queryString}`);
+    navigate(`/Form2/result?${queryString}`);
   };
 
   return (
@@ -78,8 +78,14 @@ const Form = () => {
       <button type="submit" style={{ padding: "10px", marginTop: "10px" }}>
         ارسال
       </button>
+      <button
+          onClick={() => navigate("/")}
+          className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-300 hover:scale-105 mt-4"
+        >
+          بازگشت به صفحه اصلی
+        </button>
     </form>
   );
 };
 
-export default Form;
+export default Form2;
