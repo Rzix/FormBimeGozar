@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import InputField from "./InputField";
+import validationSchemaForm2 from "./Joi Input Validator/validationSchemaForm2";
+import { number, string } from "joi";
 
 const Form2 = () => {
   const [formData, setFormData] = useState({
@@ -13,19 +15,12 @@ const Form2 = () => {
     avatar: "../assets/img/company.jpg",
   });
 
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const queryString = new URLSearchParams(formData).toString();
-
-    navigate(`/Form2/result?${queryString}`);
   };
 
   const handleImageUpload = (e) => {
@@ -38,6 +33,33 @@ const Form2 = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
+    
+    const finalFormData = {
+      ...formData,
+      avatar: formData.avatar || null, 
+    };
+  
+    const { error } = validationSchemaForm2.validate(finalFormData, {
+      abortEarly: false,
+    });
+  
+    if (error) {
+      const validationErrors = error.details.reduce((acc, curr) => {
+        acc[curr.path[0]] = curr.message;
+        return acc;
+      }, {});
+      setErrors(validationErrors);
+      return;
+    }
+  
+    const queryString = new URLSearchParams(finalFormData).toString();
+    navigate(`/Form2/result?${queryString}`);
+  };
+  
 
   return (
     <form onSubmit={handleSubmit}>
@@ -53,10 +75,6 @@ const Form2 = () => {
             src={formData.avatar}
             alt="Uploaded Avatar"
             className="rounded-full w-full h-full object-cover border-4 border-blue-500 transform transition-transform duration-300 hover:scale-105"
-            onError={(e) => {
-              e.target.src =
-                "https://images.unsplash.com/photo-1560472354-b33ff0c44a43";
-            }}
           />
           <input
             id="fileInput"
@@ -68,51 +86,54 @@ const Form2 = () => {
         </div>
       </div>
 
+      
       <InputField
         label="کد بیمه‌گذار"
+        type={number}
         name="policyId"
         value={formData.policyId}
         onChange={handleChange}
-        minLength={3}
-        maxLength={15}
+        error={errors.policyId}
       />
       <InputField
         label="کد ملی"
+        type={number}
         name="codeMelli"
         value={formData.codeMelli}
         onChange={handleChange}
-        minLength={3}
-        maxLength={15}
+        error={errors.codeMelli}
       />
       <InputField
         label="کد پرداخت بیمه‌گذار"
+        type={number}
         name="payerBimegozar"
         value={formData.payerBimegozar}
         onChange={handleChange}
-        minLength={3}
-        maxLength={15}
+        error={errors.payerBimegozar}
       />
       <InputField
-        label="کد بیمه‌گذار"
+        label="کد رایانامه"
+        type={number}
         name="bimeGozar"
         value={formData.bimeGozar}
         onChange={handleChange}
-        minLength={3}
-        maxLength={15}
+        error={errors.bimeGozar}
       />
       <InputField
         label="نام"
+        type={string}
         name="name"
         value={formData.name}
         onChange={handleChange}
-        type="text"
+        error={errors.name}
       />
       <InputField
         label="نام خانوادگی"
+        type={string}
         name="lastName"
         value={formData.lastName}
         onChange={handleChange}
-        type="text"
+        error={errors.lastName}
       />
 
       <button
@@ -123,6 +144,7 @@ const Form2 = () => {
       </button>
 
       <button
+        type="button"
         onClick={() => navigate("/")}
         className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500 transform transition-all duration-300 hover:scale-105 mt-4"
       >

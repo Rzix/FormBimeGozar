@@ -21,6 +21,11 @@ const InsuranceForm = () => {
   
   return (
     <div className=" bg-gray-100 py-8 px-4 sm:px-6 lg:px-8 ">
+      
+
+
+
+      {/* MAIN */}
       {!selectedForm ? (
         <div className="max-w-2xl mx-auto bg-white rounded-xl shadow-md overflow-hidden">
           <div className="bg-blue-600 py-6 px-8">
